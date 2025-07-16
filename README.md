@@ -1,8 +1,3 @@
-Here's the updated `README.md` with your custom `uvicorn` command added under the **"Run the Backend Server"** section:
-
----
-
-````markdown
 # 🧠 RagApp – End-to-End Retrieval-Augmented Generation (RAG) System
 
 **RagApp** is a minimal yet extensible full-stack project to build a complete **Retrieval-Augmented Generation (RAG)** system from scratch — covering every major component from data ingestion to LLM-based response generation and deployment.
