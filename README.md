@@ -1,8 +1,8 @@
 # 🧠 RagApp – End-to-End Retrieval-Augmented Generation (RAG) System
 
-**RagApp** is a minimal yet extensible project to build a complete **Retrieval-Augmented Generation (RAG)** system from scratch — covering every major component from data ingestion to LLM-based generation and full-stack deployment.
+**RagApp** is a minimal yet extensible full-stack project to build a complete **Retrieval-Augmented Generation (RAG)** system from scratch — covering every major component from data ingestion to LLM-based response generation and deployment.
 
-This project aims to provide a clear, modular, and hands-on framework for learning, experimentation, and real-world application of RAG-based architectures.
+This project is designed for **hands-on learning**, **modular experimentation**, and evolving into a **production-ready architecture** using best practices in backend, LLM orchestration, and modern tooling.
 
 > 🔧 We will incrementally evolve this into a production-ready, full-stack RAG system.
 
@@ -10,23 +10,107 @@ This project aims to provide a clear, modular, and hands-on framework for learni
 
 ## ✅ What to Expect
 
-- Clean architecture with modular components
-- Local and cloud-ready (Docker + API-first design)
-- Focus on **fast prototyping**, **inference efficiency**, and **open-source extensibility**
+- 🔎 Clean, modular architecture with retriever-generator separation
+- 🚀 FastAPI backend (async-first, OpenAPI support)
+- 🧠 Support for OpenAI and local LLMs (via API)
+- 📦 Easy setup using `uv` and Python 3.12+
+- 🧪 Focus on **fast prototyping**, **inference efficiency**, and **open-source extensibility**
+- 🔁 Full development cycle: dev → test → deploy
 
 ---
 
-## 🛠️ Work in Progress
+## 📦 Project Setup
 
-This repo is currently in active development — we’ll be iterating quickly to add:
+### 1. Prerequisites
 
-- 📄 Chunking + embedding logic
-- 🔍 Vector search & retrievers
-- 🧠 Prompt templates and LLM generation
-- ⚙️ FastAPI backend
-- 🖥️ Frontend interface (optional)
-- 🚀 Deployment-ready setup
+- Python ≥ 3.12
+- [`uv`](https://github.com/astral-sh/uv) package manager  
+  *(Install with `pip install uv` if not already installed)*
 
 ---
 
-Stay tuned and feel free to fork, clone, and follow along as we build the system step by step!
+### 2. Clone the Repository
+
+```bash
+git clone https://github.com/silvaxxx1/RagApp.git
+cd RagApp
+````
+
+---
+
+### 3. Install Dependencies
+
+```bash
+uv init
+uv add -r requirements.txt
+```
+
+> This sets up a virtual environment (`.venv`) and installs all required packages.
+
+---
+
+### 4. Set Up Environment Variables
+
+Copy the example config:
+
+```bash
+cp uv.example .env
+```
+
+Edit `.env` to add your OpenAI key and other configs:
+
+```env
+APP_NAME="RagApp"
+APP_VERSION="0.1"
+OPENAI_API_KEY="your-openai-key-here"
+```
+
+---
+
+### 5. Run the Backend Server
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Open your browser to: [http://localhost:8000/docs](http://localhost:8000/docs)
+✅ Swagger UI will show all available endpoints.
+
+---
+
+## 📌 Work in Progress
+
+This repository is under active development. Upcoming features include:
+
+* 📄 Document chunking and embedding
+* 🔍 Vector DB integration (FAISS/Chroma)
+* 🧠 Prompting and LLM generation modules
+* ⚙️ RAG pipeline orchestration
+* 🖥️ Optional frontend (React/Tailwind or minimal HTML)
+* 🚀 Dockerized and cloud deployment setup
+
+---
+
+## 🗺️ Roadmap
+
+* [x] Init project with `uv` and FastAPI
+* [ ] Embedding pipeline with OpenAI/Transformers
+* [ ] Vector search integration
+* [ ] Generation + post-processing logic
+* [ ] Full RAG chain API
+* [ ] CI/CD & Docker deployment
+
+---
+
+## 🤝 Contributing
+
+Feel free to fork, clone, and build along! PRs and ideas are welcome.
+Let’s create a clean, reusable, and battle-tested open RAG template for all.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
+
+

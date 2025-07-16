@@ -27,7 +27,7 @@
 
 @for %%i in ("/home/silva/SILVA.AI/Projects/RAG APP/.venv") do @set "VIRTUAL_ENV=%%~fi"
 
-@set "VIRTUAL_ENV_PROMPT=RAG APP"
+@set "VIRTUAL_ENV_PROMPT=rag-app"
 @if NOT DEFINED VIRTUAL_ENV_PROMPT (
     @for %%d in ("%VIRTUAL_ENV%") do @set "VIRTUAL_ENV_PROMPT=%%~nxd"
 )

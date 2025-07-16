@@ -91,8 +91,8 @@ set -gx PATH "$VIRTUAL_ENV"'/bin' $PATH
 
 # Prompt override provided?
 # If not, just use the environment name.
-if test -n 'RAG APP'
-    set -gx VIRTUAL_ENV_PROMPT 'RAG APP'
+if test -n 'rag-app'
+    set -gx VIRTUAL_ENV_PROMPT 'rag-app'
 else
     set -gx VIRTUAL_ENV_PROMPT (basename "$VIRTUAL_ENV")
 end

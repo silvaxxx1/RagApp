@@ -68,10 +68,10 @@ export-env {
     let new_path = ($env | get $path_name | prepend $venv_path)
 
     # If there is no default prompt, then use the env name instead
-    let virtual_env_prompt = (if ('RAG APP' | is-empty) {
+    let virtual_env_prompt = (if ('rag-app' | is-empty) {
         ($virtual_env | path basename)
     } else {
-        'RAG APP'
+        'rag-app'
     })
 
     let new_env = {

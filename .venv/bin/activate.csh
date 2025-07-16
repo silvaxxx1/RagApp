@@ -38,8 +38,8 @@ setenv PATH "$VIRTUAL_ENV:q/bin:$PATH:q"
 
 
 
-if ('RAG APP' != "") then
-    setenv VIRTUAL_ENV_PROMPT 'RAG APP'
+if ('rag-app' != "") then
+    setenv VIRTUAL_ENV_PROMPT 'rag-app'
 else
     setenv VIRTUAL_ENV_PROMPT "$VIRTUAL_ENV:t:q"
 endif

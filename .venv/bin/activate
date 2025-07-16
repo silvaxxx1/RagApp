@@ -98,8 +98,8 @@ _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/bin:$PATH"
 export PATH
 
-if [ "xRAG APP" != x ] ; then
-    VIRTUAL_ENV_PROMPT="(RAG APP) "
+if [ "xrag-app" != x ] ; then
+    VIRTUAL_ENV_PROMPT="(rag-app) "
 else
     VIRTUAL_ENV_PROMPT="($(basename "$VIRTUAL_ENV")) "
 fi

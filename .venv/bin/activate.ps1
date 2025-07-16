@@ -58,8 +58,8 @@ deactivate -nondestructive
 $VIRTUAL_ENV = $BASE_DIR
 $env:VIRTUAL_ENV = $VIRTUAL_ENV
 
-if ("RAG APP" -ne "") {
-    $env:VIRTUAL_ENV_PROMPT = "RAG APP"
+if ("rag-app" -ne "") {
+    $env:VIRTUAL_ENV_PROMPT = "rag-app"
 }
 else {
     $env:VIRTUAL_ENV_PROMPT = $( Split-Path $env:VIRTUAL_ENV -Leaf )
