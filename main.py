@@ -1,6 +1,10 @@
-def main():
-    print("Hello from rag-app!")
+from fastapi import FastAPI
 
 
-if __name__ == "__main__":
-    main()
+app = FastAPI()
+
+@app.get("/welcome")
+def welcome():
+    return {
+        "message": "Welcome to RagApp!"
+        }
