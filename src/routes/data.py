@@ -2,9 +2,11 @@ from fastapi import APIRouter, Depends, UploadFile, status
 from fastapi.responses import JSONResponse
 from helpers.config import get_settings, Settings
 from controllers import DataController , ProjectController
-import os
 import aiofiles
 from models import ResponseSingle
+import logging 
+
+logger = logging.getLogger("uvicorn.error")
 
 data_router = APIRouter(
     prefix="/api/v1/data",
@@ -17,7 +19,8 @@ async def upload_data(
     file: UploadFile,
     settings: Settings = Depends(get_settings)
 ):
-    is_valid, result_signal =  DataController().validate(file=file)
+    data_controller = DataController()
+    is_valid, result_signal =  data_controller.validate(file=file)
 
     if not is_valid:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
@@ -27,13 +30,18 @@ async def upload_data(
 
     project_dir_path = ProjectController().get_project_path(project_id=project_id)
 
-    file_path = os.path.join(project_dir_path,
-                            file.filename)
+    file_path = data_controller.generate_filename(
+        org_filename=file.filename,
+        project_id=project_id
+    )
 
+    try:
+        async with aiofiles.open(file_path, "wb") as f: 
+            while chuck := await file.read(settings.FILE_DEFAULT_CHUNK_SIZE):
+                await f.write(chuck)
 
-    async with aiofiles.open(file_path, "wb") as f: 
-        while chuck := await file.read(settings.FILE_DEFAULT_CHUNK_SIZE):
-            await f.write(chuck)
+    except Exception as e:
+        logger.error(f"errror while uploading file :{e}")
 
     return JSONResponse(
                         content={
