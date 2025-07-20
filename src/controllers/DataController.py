@@ -20,26 +20,30 @@ class DataController(BaseController):
             return False , ResponseSingle.FILE_SIZE_EXCEEDS.value
 
         return True , ResponseSingle.FILE_UPLOAD_SUCCESS
-
     def generate_filepath(self,
-                          org_filename: str,
-                          project_id: str):
+                        org_filename: str,
+                        project_id: str):
         
         random_key = self.generate_random_string()
         project_path = ProjectController().get_project_path(project_id=project_id)
 
-        clean_filename = self.get_clean_filename(
-                        org_filename=org_filename)
+        clean_filename = self.get_clean_filename(org_filename=org_filename)
         
-        new_file_path = os.path.join(project_path,
-                                    random_key+"_"+clean_filename)
+        # Extract file extension from the original file
+        _, ext = os.path.splitext(clean_filename)  # e.g. '.pdf' or '.txt'
+        
+        # Append extension to the random key
+        file_id = f"{random_key}{ext}"  # e.g. 'I71VQJR941.pdf'
+        
+        new_file_path = os.path.join(project_path, file_id)
 
         while os.path.exists(new_file_path):
             random_key = self.generate_random_string()
-            new_file_path = os.path.join(project_path,
-                                        random_key+"_"+clean_filename)
+            file_id = f"{random_key}{ext}"
+            new_file_path = os.path.join(project_path, file_id)
 
-        return new_file_path , random_key
+        return new_file_path, file_id
+
 
     def get_clean_filename(self,
                            org_filename: str):
