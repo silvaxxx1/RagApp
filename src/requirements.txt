@@ -7,3 +7,4 @@ aiofiles
 langchain 
 langchain-community
 PyMuPDF
+Motor 
