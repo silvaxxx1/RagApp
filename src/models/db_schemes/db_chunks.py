@@ -1,12 +1,14 @@
 from typing import Optional
-from pydantic import BaseModel , Field , validator
+from pydantic import BaseModel, Field, ConfigDict
 from bson import ObjectId
 
 class DataChunk(BaseModel):
-    _id: Optional[ObjectId]
-    chunk_text : str = Field(..., min_length=1)
-    chuck_metadata : dict 
-    chuck_project_id : ObjectId 
+    id: Optional[ObjectId] = Field(None, alias="_id")
+    chunk_text: str = Field(..., min_length=1)
+    chuck_metadata: dict 
+    chuck_project_id: ObjectId 
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True  # Needed for ObjectId
+    )
