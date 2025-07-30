@@ -65,6 +65,20 @@ APP_VERSION="0.1"
 OPENAI_API_KEY="your-openai-key-here"
 ```
 
+### 5. Run Docker Compose Services 
+
+```bash
+$ cd docker
+$ cp .env.example .env
+```
+upfdate the `.env` file with your  credentials.
+
+To run the MongoDB service, use:
+
+```bash
+$ cd docker
+$ docker-compose up -d 
+
 ---
 
 ### 5. Run the Backend Server
