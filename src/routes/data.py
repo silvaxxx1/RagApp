@@ -25,7 +25,7 @@ async def upload_data(
     file: UploadFile,
     settings: Settings = Depends(get_settings)
 ):
-    project_model = ProjectModel(db_client=request.app.mongodb)
+    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
     project = await project_model.get_project_or_create(project_id=project_id)
 
     data_controller = DataController()
@@ -70,7 +70,7 @@ async def process_endpoint(
     overlap_size = process_request.overlap_size
     do_reset = process_request.do_reset
 
-    project_model = ProjectModel(db_client=request.app.mongodb)
+    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
     project = await project_model.get_project_or_create(project_id=project_id)
     
 
@@ -100,7 +100,7 @@ async def process_endpoint(
         for i, chunk in enumerate(file_chunks)
     ]
 
-    chunk_model = ChunkModel(db_client=request.app.mongodb)
+    chunk_model = await ChunkModel.create_instance(db_client=request.app.mongodb)
 
     if do_reset == 1:
         _= await chunk_model.delete_chunk_by_id(project_id=project.id)

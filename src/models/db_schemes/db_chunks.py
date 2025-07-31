@@ -11,4 +11,16 @@ class DataChunk(BaseModel):
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True  # Needed for ObjectId
-    )
+    ) 
+
+    @classmethod
+    def get_indexes(cls):
+        return [
+                {
+                    "key": [
+                        ("chunk_project_id", 1) # 1 for ascending
+                    ],
+                    "name": "chunk_project_id_index_1",
+                    "unique": False
+                }
+        ]
