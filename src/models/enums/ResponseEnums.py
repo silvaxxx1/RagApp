@@ -10,3 +10,4 @@ class ResponseSingle(Enum):
     FILE_SIZE_EXCEEDS = "file_size_exceeds"
     PROCESSING_SUCCESS = "processing_success"
     PROCESSING_FAILED = "processing_failed"
+    NO_FILE_ERROR = "no_file_found"

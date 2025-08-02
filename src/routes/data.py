@@ -65,12 +65,12 @@ async def upload_data(
     )
 
 
-    assset_record = await asset_model.create_asset(asset=asset_resource) 
+    asset_record = await asset_model.create_asset(asset=asset_resource) 
 
     return JSONResponse(
         content={
             "message": ResponseSingle.FILE_UPLOAD_SUCCESS.value,
-            "file_id": str(assset_record.id),
+            "file_id": file_id, # be careful with this ObjectId to string conversion
         }
     )
 
@@ -81,7 +81,6 @@ async def process_endpoint(
     request: Request,
     process_request: ProcessResponse,
 ):
-    file_id = process_request.file_id
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size
     do_reset = process_request.do_reset
@@ -90,42 +89,77 @@ async def process_endpoint(
     project = await project_model.get_project_or_create(project_id=project_id)
     
 
-    process_controller = ProcessController(project_id=project_id)
-    file_content = process_controller.get_file_content(file_id=file_id)
-
-    file_chunks = process_controller.process_file_content(
-        file_content=file_content,
-        file_id=file_id,
-        chunk_size=chunk_size,
-        overlap_size=overlap_size
-    )
-
-    if file_chunks is None or len(file_chunks) == 0:
+    project_files_ids = [] 
+    if process_request.file_id :
+        project_files_ids = [process_request.file_id] 
+    else:
+        asset_model = await AssetModel.create_instance(
+                          db_client=request.app.mongodb
+                                                      ) 
+        project_files = await asset_model.get_all_project_asset(
+            asset_project_id=project.id,
+            asset_type=AssetTypeEnum.FILE.value
+        ) 
+        project_files_ids = [
+            rec["asset_name"]
+            for rec in project_files
+        ]
+    
+    if len(project_files_ids) == 0:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={"message": ResponseSingle.PROCESSING_FAILED.value}
+            content={"message": ResponseSingle.NO_FILE_ERROR.value}
         )
 
-    file_chunk_records = [
-        DataChunk(
-            chunk_text=chunk.page_content,
-            chuck_metadata=chunk.metadata,
-            chunk_order=i + 1,
-            chuck_project_id=project.id,
-        )
-        for i, chunk in enumerate(file_chunks)
-    ]
+
+    process_controller = ProcessController(project_id=project_id)
+
+    no_records = 0
+    no_files = 0 
 
     chunk_model = await ChunkModel.create_instance(db_client=request.app.mongodb)
-
     if do_reset == 1:
-        _= await chunk_model.delete_chunk_by_id(project_id=project.id)
+            _= await chunk_model.delete_chunk_by_id(project_id=project.id)
 
-    no_records = await chunk_model.get_many_chunks(chuncks=file_chunk_records)  # ✅ FIXED
+
+    for file_id in project_files_ids:
+        file_content = process_controller.get_file_content(file_id=file_id)
+        continue    
+
+        if file_content is None:
+            return logger.error(f"error while processing file: {file_id}")
+
+        file_chunks = process_controller.process_file_content(
+            file_content=file_content,
+            file_id=file_id,
+            chunk_size=chunk_size,
+            overlap_size=overlap_size
+        )
+
+        if file_chunks is None or len(file_chunks) == 0:
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={"message": ResponseSingle.PROCESSING_FAILED.value}
+            )
+
+        file_chunk_records = [
+            DataChunk(
+                chunk_text=chunk.page_content,
+                chuck_metadata=chunk.metadata,
+                chunk_order=i + 1,
+                chuck_project_id=project.id,
+            )
+            for i, chunk in enumerate(file_chunks)
+        ]
+
+
+        no_records += await chunk_model.get_many_chunks(chuncks=file_chunk_records)  # ✅ FIXED
+        no_files += 1 
 
     return JSONResponse(
         content={
             "message": ResponseSingle.PROCESSING_SUCCESS.value,
-            "inserted_chunks": no_records
+            "inserted_chunks": no_records,
+            "processed_files": no_files
         }
     )
