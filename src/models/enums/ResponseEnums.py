@@ -11,3 +11,4 @@ class ResponseSingle(Enum):
     PROCESSING_SUCCESS = "processing_success"
     PROCESSING_FAILED = "processing_failed"
     NO_FILE_ERROR = "no_file_found"
+    FILE_ID_ERROR = "no_file_found_with_this_id"

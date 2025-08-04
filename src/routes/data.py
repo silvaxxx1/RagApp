@@ -89,21 +89,36 @@ async def process_endpoint(
     project = await project_model.get_project_or_create(project_id=project_id)
     
 
-    project_files_ids = [] 
-    if process_request.file_id :
-        project_files_ids = [process_request.file_id] 
-    else:
-        asset_model = await AssetModel.create_instance(
+    asset_model = await AssetModel.create_instance(
                           db_client=request.app.mongodb
                                                       ) 
+    
+    project_files_ids = {}
+    if process_request.file_id :
+        asset_record = await asset_model.get_asset_record(asset_project_id=project.id,
+                                                         asset_name=process_request.file_id)
+       
+        if asset_record is None:
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={"message": ResponseSingle.FILE_ID_ERROR.value}
+            )
+       
+       
+        project_files_ids = {
+            asset_record.id: asset_record.asset_name
+        }
+    else:
+        
+        
         project_files = await asset_model.get_all_project_asset(
             asset_project_id=project.id,
             asset_type=AssetTypeEnum.FILE.value
         ) 
-        project_files_ids = [
-            rec["asset_name"]
-            for rec in project_files
-        ]
+        project_files_ids = {
+            record.id: record.asset_name
+            for record in project_files
+        }
     
     if len(project_files_ids) == 0:
         return JSONResponse(
@@ -122,12 +137,13 @@ async def process_endpoint(
             _= await chunk_model.delete_chunk_by_id(project_id=project.id)
 
 
-    for file_id in project_files_ids:
+    for  asset_id ,file_id in project_files_ids.items():
         file_content = process_controller.get_file_content(file_id=file_id)
-        continue    
+            
 
         if file_content is None:
             return logger.error(f"error while processing file: {file_id}")
+            continue
 
         file_chunks = process_controller.process_file_content(
             file_content=file_content,
@@ -148,6 +164,7 @@ async def process_endpoint(
                 chuck_metadata=chunk.metadata,
                 chunk_order=i + 1,
                 chuck_project_id=project.id,
+                chunk_asset_id=asset_id
             )
             for i, chunk in enumerate(file_chunks)
         ]
