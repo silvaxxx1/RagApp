@@ -28,7 +28,7 @@ async def upload_data(
     file: UploadFile,
     settings: Settings = Depends(get_settings)
 ):
-    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
+    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb) 
     project = await project_model.get_project_or_create(project_id=project_id)
 
     data_controller = DataController()
@@ -48,7 +48,7 @@ async def upload_data(
     )
 
     try:
-        async with aiofiles.open(file_path, "wb") as f:
+        async with aiofiles.open(file_path, "wb") as f: # aiofiles is asynchronous
             while chuck := await file.read(settings.FILE_DEFAULT_CHUNK_SIZE):
                 await f.write(chuck)
     except Exception as e:
