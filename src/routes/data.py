@@ -77,10 +77,12 @@ async def upload_data(
 
 @data_router.post("/process/{project_id}")
 async def process_endpoint(
-    project_id: str,
-    request: Request,
-    process_request: ProcessResponse,
-):
+                        project_id: str,
+                        request: Request,
+                        process_request: ProcessResponse,
+                            ):
+    
+
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size
     do_reset = process_request.do_reset
@@ -90,8 +92,8 @@ async def process_endpoint(
     
 
     asset_model = await AssetModel.create_instance(
-                          db_client=request.app.mongodb
-                                                      ) 
+                                                db_client=request.app.mongodb
+                                                  ) 
     
     project_files_ids = {}
     if process_request.file_id :
@@ -108,8 +110,8 @@ async def process_endpoint(
         project_files_ids = {
             asset_record.id: asset_record.asset_name
         }
-    else:
         
+    else:
         
         project_files = await asset_model.get_all_project_asset(
             asset_project_id=project.id,
