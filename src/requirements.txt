@@ -9,4 +9,5 @@ langchain-community
 PyMuPDF
 Motor 
 openai 
+cohere
 

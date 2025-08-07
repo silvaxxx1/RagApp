@@ -9,4 +9,16 @@ class LLMEnums(Enum):
 class OpenAIEnums(Enum):
     SYSTEM = "system" 
     USER = "user" 
-    ASSISTANT = "assistant"
+    ASSISTANT = "assistant" 
+
+class CohereEnums(Enum):
+    SYSTEM = "SYSTEM" 
+    USER = "USER" 
+    ASSISTANT = "CHATBOT" 
+
+    DOCUMENT = "search_document"
+    QUERY = "search_query"
+
+class DocTypeEnums(Enum):
+    QUERY = "query" 
+    DOCUMENT = "document"
