@@ -8,3 +8,5 @@ langchain
 langchain-community
 PyMuPDF
 Motor 
+openai 
+

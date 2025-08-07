@@ -99,7 +99,7 @@ Then open [http://localhost:5000/docs](http://localhost:5000/docs) to see the in
 
 ---
 
-## 📌 Work in Progress
+## 📌 Work in Progress 
 
 This repository is under active development. Upcoming features include:
 
