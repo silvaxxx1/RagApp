@@ -17,5 +17,19 @@ class BaseController:
 
         os.makedirs(self.files_dir, exist_ok=True)  # optional: auto-create
 
+        self.database_dir = os.path.join(
+                                    self.base_dir,
+                                    "assets/database"
+                                    )
+        
     def generate_random_string(self):
         return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    
+    def get_database_path(self, db_name: str):
+        database_path = os.path.join(self.database_dir, db_name)
+
+        if not os.path.exists(database_path):
+            os.makedirs(database_path)
+
+        return database_path
+        
