@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import base , data
+from routes import base , data , nlp
 from motor.motor_asyncio import AsyncIOMotorClient
 from helpers.config import get_settings 
 from stores.llm.LLMProviderFactory import LLMProviderFactory
@@ -13,10 +13,9 @@ async def startup_span():
     llm_provider = LLMProviderFactory(settings)
     vectordb_provider_factory = VectorDBProvidersFactory(settings) 
 
-
     # generation_client 
-    app_generation_client = llm_provider.create(provider=settings.GENERATION_BACKEND)
-    app_generation_client.set_gen_model(model_id = settings.GENERATION_MODEL_ID)
+    app.generation_client = llm_provider.create(provider=settings.GENERATION_BACKEND)
+    app.generation_client.set_gen_model(model_id = settings.GENERATION_MODEL_ID)
     # embedding_client
     app.embedding_client = llm_provider.create(provider=settings.EMBEDDING_BACKEND)
     app.embedding_client.set_emb_model(model_id = settings.EMBEDDING_MODEL_ID, emb_size = settings.EMBEDDING_MODEL_SIZE)
@@ -32,3 +31,4 @@ app.on_event("shutdown")(shutdown_span)
 
 app.include_router(base.base_router)
 app.include_router(data.data_router) 
+app.include_router(nlp.nlp_router)

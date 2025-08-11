@@ -4,7 +4,7 @@ from qdrant_client import models , QdrantClient
 from ..VectorDBEnums import DistanceMethodEnum 
 from typing import List 
 
-class QdrantDB(VectorDBInterface):
+class QdrantDBProvider(VectorDBInterface):
     def __init__(self,
                  db_path : str,
                  distance_method : DistanceMethodEnum = str):
@@ -27,7 +27,7 @@ class QdrantDB(VectorDBInterface):
         self.client = None 
 
     def is_collection_exist(self, collection_name)->bool:
-        return self.client.collections.exists(collection_name = collection_name)
+        return self.client.collection_exists(collection_name=collection_name)
     
     def list_all_collection(self)->List:
         return self.client.get_collections() 
@@ -95,11 +95,7 @@ class QdrantDB(VectorDBInterface):
             metadata = [None] * len(texts) 
 
         if record_ids is None:
-            record_ids = [None] * len(texts) 
-
-        if not self.is_collection_exist(collection_name):
-            self.logger.warning(f"Collection {collection_name} does not exist") 
-            return False
+            record_ids = list(range(0, len(texts)))
 
         for i in range(0, len(texts), batch_size):
             batch_end = i + batch_size
@@ -107,9 +103,11 @@ class QdrantDB(VectorDBInterface):
             batch_texts = texts[i:batch_end]
             batch_vectors = vectors[i:batch_end]
             batch_metadata = metadata[i:batch_end]
+            batch_record_ids = record_ids[i:batch_end]
 
             batch_record = [
                 models.Record(
+                    id=batch_record_ids[x],
                     vector=batch_vectors[x],
                     payload= {
                         "text": batch_texts[x],

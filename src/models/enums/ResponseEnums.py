@@ -12,3 +12,6 @@ class ResponseSingle(Enum):
     PROCESSING_FAILED = "processing_failed"
     NO_FILE_ERROR = "no_file_found"
     FILE_ID_ERROR = "no_file_found_with_this_id"
+    PROJECT_NOT_FOUND = "project_not_found"
+    INSERT_INTO_VECTOR_DB_ERROR = "insert_into_vector_db_failed"
+    INSERT_INTO_VECTOR_DB_SUCCESS = "insert_into_vector_db_success"

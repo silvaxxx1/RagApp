@@ -29,7 +29,7 @@ class CohereProviders(LLMInterface):
 
     def set_emb_model(self,model_id : str, emb_size : int):
         self.emb_model_id = model_id
-        self.emd_size = emb_size
+        self.emb_size = emb_size
 
     def process_text(self,
                      text : str):
@@ -56,7 +56,7 @@ class CohereProviders(LLMInterface):
         response = self.client.chat(
                                     model = self.gen_model_id,
                                     chat_history = char_history,
-                                    massage = self.process_text(prompt),
+                                    message = self.process_text(prompt),
                                     temperature = temperature,
                                     max_tokens = max_output_tokens
                                     )
@@ -73,7 +73,7 @@ class CohereProviders(LLMInterface):
                    text : str,
                    doc_type : str = None):
         if not self.client:
-            self.logger.error("Client for embedding from OpenAI is not initialized")
+            self.logger.error("Client for embedding from Cohere is not initialized")
             return None 
         
         if self.emb_model_id is None:
@@ -91,7 +91,7 @@ class CohereProviders(LLMInterface):
             embedding_types=['float'],    
         )
 
-        if not response or response.embeddings   or not response.embeddings.float:
+        if not response or not response.embeddings   or not response.embeddings.float:
             self.logger.error("Embedding from Cohere failed")
             return None
         

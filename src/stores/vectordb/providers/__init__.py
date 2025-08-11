@@ -1,1 +1,1 @@
-from QdrantDBProvider import QdrantDB 
+from .QdrantDBProvider import QdrantDBProvider

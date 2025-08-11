@@ -7,7 +7,7 @@ from models import ResponseSingle
 import logging
 from .schemes.data import ProcessResponse
 from models.ProjectModel import ProjectModel
-from models.db_schemes import DataChunk , Asset
+from models.db_schemes import DataChunk, Asset
 from models.ChunkModel import ChunkModel
 from models.AssetModel import AssetModel
 from models.enums.AssetTypeEnum import AssetTypeEnum
@@ -48,9 +48,9 @@ async def upload_data(
     )
 
     try:
-        async with aiofiles.open(file_path, "wb") as f: # aiofiles is asynchronous
-            while chuck := await file.read(settings.FILE_DEFAULT_CHUNK_SIZE):
-                await f.write(chuck)
+        async with aiofiles.open(file_path, "wb") as f:  # aiofiles is asynchronous
+            while chunk := await file.read(settings.FILE_DEFAULT_CHUNK_SIZE):
+                await f.write(chunk)
     except Exception as e:
         logger.error(f"error while uploading file: {e}")
 
@@ -64,41 +64,37 @@ async def upload_data(
         asset_size=os.path.getsize(file_path),
     )
 
-
     asset_record = await asset_model.create_asset(asset=asset_resource) 
 
     return JSONResponse(
         content={
             "message": ResponseSingle.FILE_UPLOAD_SUCCESS.value,
-            "file_id": file_id, # be careful with this ObjectId to string conversion
+            "file_id": file_id,  # be careful with this ObjectId to string conversion
         }
     )
 
 
 @data_router.post("/process/{project_id}")
 async def process_endpoint(
-                        project_id: str,
-                        request: Request,
-                        process_request: ProcessResponse,
-                            ):
-    
-
+    project_id: str,
+    request: Request,
+    process_request: ProcessResponse,
+):
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size
     do_reset = process_request.do_reset
 
     project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
     project = await project_model.get_project_or_create(project_id=project_id)
-    
 
-    asset_model = await AssetModel.create_instance(
-                                                db_client=request.app.mongodb
-                                                  ) 
-    
+    asset_model = await AssetModel.create_instance(db_client=request.app.mongodb) 
+
     project_files_ids = {}
-    if process_request.file_id :
-        asset_record = await asset_model.get_asset_record(asset_project_id=project.id,
-                                                         asset_name=process_request.file_id)
+    if process_request.file_id:
+        asset_record = await asset_model.get_asset_record(
+            asset_project_id=project.id,
+            asset_name=process_request.file_id
+        )
        
         if asset_record is None:
             return JSONResponse(
@@ -106,13 +102,11 @@ async def process_endpoint(
                 content={"message": ResponseSingle.FILE_ID_ERROR.value}
             )
        
-       
         project_files_ids = {
             asset_record.id: asset_record.asset_name
         }
         
     else:
-        
         project_files = await asset_model.get_all_project_asset(
             asset_project_id=project.id,
             asset_type=AssetTypeEnum.FILE.value
@@ -128,23 +122,21 @@ async def process_endpoint(
             content={"message": ResponseSingle.NO_FILE_ERROR.value}
         )
 
-
     process_controller = ProcessController(project_id=project_id)
 
     no_records = 0
     no_files = 0 
 
     chunk_model = await ChunkModel.create_instance(db_client=request.app.mongodb)
+
     if do_reset == 1:
-            _= await chunk_model.delete_chunk_by_id(project_id=project.id)
+        _ = await chunk_model.delete_chunk_by_id(project_id=project.id)
 
-
-    for  asset_id ,file_id in project_files_ids.items():
+    for asset_id, file_id in project_files_ids.items():
         file_content = process_controller.get_file_content(file_id=file_id)
-            
 
         if file_content is None:
-            return logger.error(f"error while processing file: {file_id}")
+            logger.error(f"error while processing file: {file_id}")
             continue
 
         file_chunks = process_controller.process_file_content(
@@ -163,17 +155,17 @@ async def process_endpoint(
         file_chunk_records = [
             DataChunk(
                 chunk_text=chunk.page_content,
-                chuck_metadata=chunk.metadata,
+                chunk_metadata=chunk.metadata,
                 chunk_order=i + 1,
-                chuck_project_id=project.id,
+                chunk_project_id=project.id,
                 chunk_asset_id=asset_id
             )
             for i, chunk in enumerate(file_chunks)
         ]
 
-
-        no_records += await chunk_model.get_many_chunks(chuncks=file_chunk_records)  # ✅ FIXED
-        no_files += 1 
+        no_records += await chunk_model.get_many_chunks(chunks=file_chunk_records)
+        no_files += 1
+ 
 
     return JSONResponse(
         content={
