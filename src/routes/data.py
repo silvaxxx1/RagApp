@@ -130,7 +130,7 @@ async def process_endpoint(
     chunk_model = await ChunkModel.create_instance(db_client=request.app.mongodb)
 
     if do_reset == 1:
-        _ = await chunk_model.delete_chunk_by_id(project_id=project.id)
+        _ = await chunk_model.delete_chunk_by_project_id(project_id=project.id)
 
     for asset_id, file_id in project_files_ids.items():
         file_content = process_controller.get_file_content(file_id=file_id)

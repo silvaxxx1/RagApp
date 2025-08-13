@@ -4,6 +4,8 @@ from enum import Enum
 class LLMEnums(Enum):
     OPENAI = "openai" 
     COHERE = "cohere" 
+    OPEN_SOURCE_EMBEDDINGS = "open_source_embeddings"  # 👈 new
+
 
     
 class OpenAIEnums(Enum):

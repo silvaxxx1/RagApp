@@ -15,3 +15,6 @@ class ResponseSingle(Enum):
     PROJECT_NOT_FOUND = "project_not_found"
     INSERT_INTO_VECTOR_DB_ERROR = "insert_into_vector_db_failed"
     INSERT_INTO_VECTOR_DB_SUCCESS = "insert_into_vector_db_success"
+    VECTORDB_COLLECTION_RETRIEVED = "vector_db_collection_retrieved"
+    VECTORDB_SEARCH_SUCCESS = "vector_db_search_success"
+    VECTORDB_SEARCH_ERROR = "vector_db_search_failed"
