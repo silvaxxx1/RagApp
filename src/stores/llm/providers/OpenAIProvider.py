@@ -27,8 +27,8 @@ class OpenAIProvider(LLMInterface):
             base_url = self.api_url if self.api_url and len(self.api_url) else None
         ) 
         
+        self.enums = OpenAIEnums
         self.logger = logging.getLogger(__name__) 
-
     def set_gen_model(self,model_id : str):
         self.gen_model_id = model_id  
     
@@ -73,7 +73,7 @@ class OpenAIProvider(LLMInterface):
         char_history.append(self.construct_prompt(prompt=response.choices[0].message.content,
                                                   role=OpenAIEnums.ASSISTANT.value))
         
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content
         
 
     def embed_text(self,

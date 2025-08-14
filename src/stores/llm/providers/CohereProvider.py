@@ -24,6 +24,7 @@ class CohereProviders(LLMInterface):
         
         self.logger = logging.getLogger(__name__) 
 
+        self.enums = CohereEnums
     def set_gen_model(self,model_id : str):
         self.gen_model_id = model_id
 
