@@ -84,6 +84,17 @@ class NLPController(BaseController):
                                                         limit=limit)
         if not results :
             return False
-        return json.dumps(results,
-                          default=lambda x: x.__dict__)
-
+        
+        return results 
+    
+    def answer_rag_query(self, project: Project, query: str, limit: int = 10):
+        
+      
+        # do semantic search in vector db 
+        retrived_docs = self.search_vector_db_collection(project=project,
+                                                        text=query,
+                  
+                                                        limit=limit)
+        if not retrived_docs or len(retrived_docs) == 0:
+            return False
+        

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod 
 from typing import List
+from models.db_schemes import RetrievedDocument
 
 
 class VectorDBInterface(ABC):
@@ -62,5 +63,5 @@ class VectorDBInterface(ABC):
                     collection_name : str,
                     vector : list,
                     limit : int,
-                    ):
+                    )-> List[RetrievedDocument]:
         pass
