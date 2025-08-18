@@ -112,7 +112,9 @@ class NLPController(BaseController):
             for idx, doc in enumerate(retrived_docs)
         ])
          
-        footer_prompt = self.template_parser.get("rag", "footer_prompt")
+        # This is the line that needs to be changed.
+        # Pass the 'query' variable to the template parser here.
+        footer_prompt = self.template_parser.get("rag", "footer_prompt", {"query": query})
 
 
         chat_history = [
