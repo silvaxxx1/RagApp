@@ -8,7 +8,6 @@ from stores.llm.templates.template_parser import TemplateParser
 
 app = FastAPI()
 
-
 async def startup_span():
     settings = get_settings()
     app.mongodb_connec = AsyncIOMotorClient(get_settings().MONGODB_URL)
