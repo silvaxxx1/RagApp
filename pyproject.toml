@@ -6,6 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiofiles>=24.1.0",
+    "asyncpg>=0.30.0",
+    "autopep8>=2.3.2",
+    "black>=25.1.0",
     "cohere>=5.16.2",
     "fastapi>=0.116.1",
     "langchain>=0.3.27",
@@ -17,6 +20,8 @@ dependencies = [
     "python-dotenv>=1.1.1",
     "python-multipart>=0.0.20",
     "qdrant-client>=1.15.1",
+    "ruff>=0.12.10",
     "sentence-transformers>=5.1.0",
+    "sqlalchemy>=2.0.42",
     "uvicorn[standard]>=0.35.0",
 ]

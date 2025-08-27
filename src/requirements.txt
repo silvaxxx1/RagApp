@@ -10,4 +10,7 @@ PyMuPDF
 Motor 
 openai 
 cohere
-qdrant-client 
+qdrant-client
+SQLAlchemy
+asyncpg
+

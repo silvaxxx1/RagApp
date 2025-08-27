@@ -6,10 +6,11 @@ base_router = APIRouter(
     tags=["api_v1"],
 )
 
+
 @base_router.get("/")
 async def welcome(settings: Settings = Depends(get_settings)):
-    
-    app_name = settings.APP_NAME 
+
+    app_name = settings.APP_NAME
     app_version = settings.APP_VERSION
 
     return {

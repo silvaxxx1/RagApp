@@ -28,7 +28,8 @@ async def upload_data(
     file: UploadFile,
     settings: Settings = Depends(get_settings)
 ):
-    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb) 
+    async with request.app.db_client() as session:
+    project_model = await ProjectModel.create_instance(db_client=session) 
     project = await project_model.get_project_or_create(project_id=project_id)
 
     data_controller = DataController()
@@ -54,8 +55,9 @@ async def upload_data(
     except Exception as e:
         logger.error(f"error while uploading file: {e}")
 
+    async with request.app.db_client() as session:
     # store asset to db
-    asset_model = await AssetModel.create_instance(db_client=request.app.mongodb)
+    asset_model = await AssetModel.create_instance(db_client=session)
 
     asset_resource = Asset(
         asset_project_id=project.id,
@@ -82,12 +84,14 @@ async def process_endpoint(
 ):
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size
+    async with request.app.db_client() as session:
     do_reset = process_request.do_reset
 
-    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
+    async with request.app.db_client() as session:
+    project_model = await ProjectModel.create_instance(db_client=session)
     project = await project_model.get_project_or_create(project_id=project_id)
 
-    asset_model = await AssetModel.create_instance(db_client=request.app.mongodb) 
+    asset_model = await AssetModel.create_instance(db_client=session) 
 
     project_files_ids = {}
     if process_request.file_id:
@@ -123,11 +127,12 @@ async def process_endpoint(
         )
 
     process_controller = ProcessController(project_id=project_id)
+    async with request.app.db_client() as session:
 
     no_records = 0
     no_files = 0 
 
-    chunk_model = await ChunkModel.create_instance(db_client=request.app.mongodb)
+    chunk_model = await ChunkModel.create_instance(db_client=session)
 
     if do_reset == 1:
         _ = await chunk_model.delete_chunk_by_project_id(project_id=project.id)

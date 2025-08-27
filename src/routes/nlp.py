@@ -24,8 +24,10 @@ async def index_project(
     logger.info(f"Starting indexing for project_id: {project_id}")
     logger.info(f"do_reset flag: {push_request.do_reset}")
 
-    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
-    chunk_model = await ChunkModel.create_instance(db_client=request.app.mongodb)
+    async with request.app.db_client() as session:
+    async with request.app.db_client() as session:
+    project_model = await ProjectModel.create_instance(db_client=session)
+    chunk_model = await ChunkModel.create_instance(db_client=session)
 
     project = await project_model.get_project_or_create(project_id=project_id)
 
@@ -87,9 +89,10 @@ async def index_project(
     )
 
 
+    async with request.app.db_client() as session:
 @nlp_router.get("/index/info/{project_id}")
 async def get_project_index_info(request: Request, project_id: str):
-    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
+    project_model = await ProjectModel.create_instance(db_client=session)
 
     project = await project_model.get_project_or_create(project_id=project_id)
 
@@ -108,10 +111,11 @@ async def get_project_index_info(request: Request, project_id: str):
         }
     )
 
+    async with request.app.db_client() as session:
 
 @nlp_router.post("/index/search/{project_id}")
 async def search_index(request: Request, project_id: str, search_request: SearchRequest):
-    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
+    project_model = await ProjectModel.create_instance(db_client=session)
 
     project = await project_model.get_project_or_create(project_id=project_id)
 
@@ -141,11 +145,12 @@ async def search_index(request: Request, project_id: str, search_request: Search
         }
     )
 
+    async with request.app.db_client() as session:
 
 
 @nlp_router.post("/index/answer/{project_id}")
 async def answer_rag(request: Request, project_id: str, search_request: SearchRequest):
-    project_model = await ProjectModel.create_instance(db_client=request.app.mongodb)
+    project_model = await ProjectModel.create_instance(db_client=session)
 
     project = await project_model.get_project_or_create(project_id=project_id)
 
