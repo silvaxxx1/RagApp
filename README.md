@@ -10,12 +10,12 @@ This project is designed for **hands-on learning**, **modular experimentation**,
 
 ## ✅ What to Expect
 
-- 🔎 Clean, modular architecture with retriever-generator separation
-- 🚀 FastAPI backend (async-first, OpenAPI support)
-- 🧠 Support for OpenAI and local LLMs (via API)
-- 📦 Easy setup using `uv` and Python 3.12+
-- 🧪 Focus on **fast prototyping**, **inference efficiency**, and **open-source extensibility**
-- 🔁 Full development cycle: dev → test → deploy
+- 🔎 Clean, modular architecture with retriever-generator separation  
+- 🚀 FastAPI backend (async-first, OpenAPI support)  
+- 🧠 Support for OpenAI and local LLMs (via API)  
+- 📦 Easy setup using `uv` and Python 3.12+  
+- 🧪 Focus on **fast prototyping**, **inference efficiency**, and **open-source extensibility**  
+- 🔁 Full development cycle: dev → test → deploy  
 
 ---
 
@@ -23,7 +23,7 @@ This project is designed for **hands-on learning**, **modular experimentation**,
 
 ### 1. Prerequisites
 
-- Python ≥ 3.12
+- Python ≥ 3.12  
 - [`uv`](https://github.com/astral-sh/uv) package manager  
   *(Install with `pip install uv` if not already installed)*
 
@@ -65,20 +65,41 @@ APP_VERSION="0.1"
 OPENAI_API_KEY="your-openai-key-here"
 ```
 
+### 5. Run Docker Compose Services 
+
+```bash
+$ cd docker
+$ cp .env.example .env
+```
+upfdate the `.env` file with your  credentials.
+
+To run the MongoDB service, use:
+
+```bash
+$ cd docker
+$ docker-compose up -d 
+
 ---
 
 ### 5. Run the Backend Server
+
+To run locally with default settings:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Open your browser to: [http://localhost:8000/docs](http://localhost:8000/docs)
-✅ Swagger UI will show all available endpoints.
+To expose the server on all interfaces and custom port:
+
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 5000
+```
+
+Then open [http://localhost:5000/docs](http://localhost:5000/docs) to see the interactive Swagger UI.
 
 ---
 
-## 📌 Work in Progress
+## 📌 Work in Progress 
 
 This repository is under active development. Upcoming features include:
 
@@ -112,5 +133,4 @@ Let’s create a clean, reusable, and battle-tested open RAG template for all.
 ## 📄 License
 
 This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
-
 
