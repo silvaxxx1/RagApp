@@ -13,4 +13,5 @@ cohere
 qdrant-client
 SQLAlchemy
 asyncpg
-
+alembic
+psycopg2-binary

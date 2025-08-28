@@ -9,7 +9,7 @@ import uuid
 from pydantic import BaseModel
 
 
-class Chunk(SQLAlchemyBase):
+class DataChunk(SQLAlchemyBase):
     __tablename__ = "chunks"
 
     chunk_id = Column(Integer, primary_key=True, autoincrement=True)
