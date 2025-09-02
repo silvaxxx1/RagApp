@@ -1,136 +1,136 @@
 # 🧠 RagApp – End-to-End Retrieval-Augmented Generation (RAG) System
 
-**RagApp** is a minimal yet extensible full-stack project to build a complete **Retrieval-Augmented Generation (RAG)** system from scratch — covering every major component from data ingestion to LLM-based response generation and deployment.
-
-This project is designed for **hands-on learning**, **modular experimentation**, and evolving into a **production-ready architecture** using best practices in backend, LLM orchestration, and modern tooling.
-
-> 🔧 We will incrementally evolve this into a production-ready, full-stack RAG system.
+**RagApp** is a full-stack, extensible project for building **Retrieval-Augmented Generation (RAG)** systems from scratch — covering everything from data ingestion to LLM-based response generation and deployment.
 
 ---
 
-## ✅ What to Expect
+<p align="center">
+  <img src="ragapp.png" alt="Quantization Overview">
+</p>
 
-- 🔎 Clean, modular architecture with retriever-generator separation  
-- 🚀 FastAPI backend (async-first, OpenAPI support)  
-- 🧠 Support for OpenAI and local LLMs (via API)  
-- 📦 Easy setup using `uv` and Python 3.12+  
-- 🧪 Focus on **fast prototyping**, **inference efficiency**, and **open-source extensibility**  
-- 🔁 Full development cycle: dev → test → deploy  
+
+---
+This repo is designed for:
+
+* **Hands-on learning** (understand each piece of RAG systems)
+* **Modular experimentation** (swap databases, models, retrievers)
+* **Scaling to production** (deployment, orchestration, monitoring)
+
+> 🔧 Currently in **Phase 2** — migrating from MongoDB → Postgres/pgvector for scalable vector search and orchestration.
 
 ---
 
-## 📦 Project Setup
+## ✅ Highlights
 
-### 1. Prerequisites
-
-- Python ≥ 3.12  
-- [`uv`](https://github.com/astral-sh/uv) package manager  
-  *(Install with `pip install uv` if not already installed)*
+* 🔎 **Retriever-Generator separation** (clean, modular architecture)
+* 🚀 **FastAPI backend** (async-first, OpenAPI ready)
+* 🧠 **LLM flexibility**: OpenAI, Ollama (on-prem), Cohere, Sentence Transformers
+* 📦 **Database options**: MongoDB (Motor) ✅ → Postgres + pgvector (in progress)
+* 🔍 **Vector search**: Qdrant (current) → pgvector (planned)
+* 🧪 **LangChain (PDF parsing + chunking only)**, keeping rest lightweight
+* 🐳 **Dockerized services** (MongoDB, Postgres, Qdrant)
+* 🔁 **CI/CD-ready** architecture (phase 3 roadmap)
 
 ---
 
-### 2. Clone the Repository
+## 📦 Tech Stack (v1 → v2)
+
+### **Phase 1 – RagApp-MongoDB-v1 (Latest Stable)**
+
+* FastAPI + Uvicorn
+* MongoDB (Motor async driver)
+* Qdrant for embeddings
+* Ollama (local LLMs), OpenAI, Cohere
+* Sentence Transformers (open-source embeddings)
+* LangChain (document loaders + chunking only)
+* Docker Compose for services
+
+✅ Stable and functional baseline with **MongoDB + Qdrant**.
+
+---
+
+### **Phase 2 – Scaling Up (In Progress 🚧)**
+
+* **Postgres + Alembic migrations (done)**
+* **pgvector integration (coming soon)**
+* Refactored backend to support dual database setup
+* Running hybrid **Postgres + Qdrant** stack smoothly
+
+Next → replace Qdrant with **pgvector-only architecture**.
+
+---
+
+### **Phase 3 – Advanced Orchestration (Planned 🚀)**
+
+* Celery + RabbitMQ for background tasks & distributed pipelines
+* Advanced RAG strategies (re-ranking, multi-query, hybrid retrieval)
+* Deployment-ready infra (cloud/K8s, monitoring, scaling)
+
+---
+
+## ⚡ Quickstart
+
+### 1. Clone & Setup
 
 ```bash
 git clone https://github.com/silvaxxx1/RagApp.git
 cd RagApp
-````
+```
 
----
-
-### 3. Install Dependencies
+### 2. Install Dependencies
 
 ```bash
 uv init
 uv add -r requirements.txt
 ```
 
-> This sets up a virtual environment (`.venv`) and installs all required packages.
-
----
-
-### 4. Set Up Environment Variables
-
-Copy the example config:
+### 3. Environment Variables
 
 ```bash
 cp uv.example .env
 ```
 
-Edit `.env` to add your OpenAI key and other configs:
+Update `.env` with your API keys and configs.
 
-```env
-APP_NAME="RagApp"
-APP_VERSION="0.1"
-OPENAI_API_KEY="your-openai-key-here"
-```
-
-### 5. Run Docker Compose Services 
+### 4. Run Services (Docker)
 
 ```bash
-$ cd docker
-$ cp .env.example .env
+cd docker
+cp .env.example .env   # update with credentials
+docker-compose up -d
 ```
-upfdate the `.env` file with your  credentials.
 
-To run the MongoDB service, use:
-
-```bash
-$ cd docker
-$ docker-compose up -d 
-
----
-
-### 5. Run the Backend Server
-
-To run locally with default settings:
+### 5. Run the Backend
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-To expose the server on all interfaces and custom port:
-
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 5000
-```
-
-Then open [http://localhost:5000/docs](http://localhost:5000/docs) to see the interactive Swagger UI.
-
----
-
-## 📌 Work in Progress 
-
-This repository is under active development. Upcoming features include:
-
-* 📄 Document chunking and embedding
-* 🔍 Vector DB integration (FAISS/Chroma)
-* 🧠 Prompting and LLM generation modules
-* ⚙️ RAG pipeline orchestration
-* 🖥️ Optional frontend (React/Tailwind or minimal HTML)
-* 🚀 Dockerized and cloud deployment setup
+Access Swagger UI at → [http://localhost:5000/docs](http://localhost:5000/docs)
 
 ---
 
 ## 🗺️ Roadmap
 
-* [x] Init project with `uv` and FastAPI
-* [ ] Embedding pipeline with OpenAI/Transformers
-* [ ] Vector search integration
-* [ ] Generation + post-processing logic
-* [ ] Full RAG chain API
-* [ ] CI/CD & Docker deployment
+* [x] **Phase 1** – MongoDB + Qdrant baseline
+* [x] Alembic migrations with Postgres
+* [ ] Full pgvector migration (replace Qdrant)
+* [ ] RAG pipeline orchestration improvements
+* [ ] Background tasks with Celery + RabbitMQ
+* [ ] Advanced RAG methods (re-ranking, hybrid, multi-query)
+* [ ] Production deployment templates (Docker/K8s, CI/CD)
 
 ---
 
 ## 🤝 Contributing
 
-Feel free to fork, clone, and build along! PRs and ideas are welcome.
-Let’s create a clean, reusable, and battle-tested open RAG template for all.
+Fork, clone, and build along!
+Ideas, PRs, and discussions are welcome as we evolve RagApp into a **production-grade RAG template** for the community.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
+MIT License – see [LICENSE](./LICENSE)
 
+---
