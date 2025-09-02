@@ -18,22 +18,17 @@ nlp_router = APIRouter(
 @nlp_router.post("/index/push/{project_id}")
 async def index_project(
     request: Request,
-    project_id: str,
+    project_id: int,
     push_request: PushRequest,
 ):
     logger.info(f"Starting indexing for project_id: {project_id}")
     logger.info(f"do_reset flag: {push_request.do_reset}")
 
-    async with request.app.db_client() as session:
-    async with request.app.db_client() as session:
-    project_model = await ProjectModel.create_instance(db_client=session)
-    chunk_model = await ChunkModel.create_instance(db_client=session)
+    # Pass the sessionmaker directly, not a created session
+    project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
+    chunk_model = await ChunkModel.create_instance(db_client=request.app.db_client)
 
     project = await project_model.get_project_or_create(project_id=project_id)
-
-    logger.info(f"Project ID type: {type(project.id)}")
-    logger.info(f"Project ID value: {project.id}")
-
     if not project:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -53,7 +48,9 @@ async def index_project(
     total_inserted = 0
 
     while has_record:
-        page_chunks = await chunk_model.get_project_chunk(project_id=project.id, page_no=page_no)
+        page_chunks = await chunk_model.get_project_chunk(
+            project_id=project_id, page_no=page_no
+        )
 
         logger.info(f"page_no={page_no}, chunks received: {len(page_chunks)}")
 
@@ -76,7 +73,9 @@ async def index_project(
         if not is_inserted:
             return JSONResponse(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                content={"message": ResponseSingle.INSERT_INTO_VECTOR_DB_ERROR.value},
+                content={
+                    "message": ResponseSingle.INSERT_INTO_VECTOR_DB_ERROR.value
+                },
             )
 
         total_inserted += len(page_chunks)
@@ -89,11 +88,10 @@ async def index_project(
     )
 
 
-    async with request.app.db_client() as session:
 @nlp_router.get("/index/info/{project_id}")
-async def get_project_index_info(request: Request, project_id: str):
-    project_model = await ProjectModel.create_instance(db_client=session)
-
+async def get_project_index_info(request: Request, project_id: int):
+    # Pass the sessionmaker directly, not a created session
+    project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
     project = await project_model.get_project_or_create(project_id=project_id)
 
     nlp_controller = NLPController(
@@ -111,12 +109,11 @@ async def get_project_index_info(request: Request, project_id: str):
         }
     )
 
-    async with request.app.db_client() as session:
 
 @nlp_router.post("/index/search/{project_id}")
-async def search_index(request: Request, project_id: str, search_request: SearchRequest):
-    project_model = await ProjectModel.create_instance(db_client=session)
-
+async def search_index(request: Request, project_id: int, search_request: SearchRequest):
+    # Pass the sessionmaker directly, not a created session
+    project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
     project = await project_model.get_project_or_create(project_id=project_id)
 
     nlp_controller = NLPController(
@@ -128,14 +125,16 @@ async def search_index(request: Request, project_id: str, search_request: Search
 
     results = nlp_controller.search_vector_db_collection(
         project=project,
-        text=search_request.text,  # Use instance here, NOT class
+        text=search_request.text,
         limit=search_request.limit,
     )
 
     if not results:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={"message": ResponseSingle.VECTORDB_COLLECTION_RETRIEVAL_ERROR.value},
+            content={
+                "message": ResponseSingle.VECTORDB_COLLECTION_RETRIEVAL_ERROR.value
+            },
         )
 
     return JSONResponse(
@@ -145,13 +144,11 @@ async def search_index(request: Request, project_id: str, search_request: Search
         }
     )
 
-    async with request.app.db_client() as session:
-
 
 @nlp_router.post("/index/answer/{project_id}")
-async def answer_rag(request: Request, project_id: str, search_request: SearchRequest):
-    project_model = await ProjectModel.create_instance(db_client=session)
-
+async def answer_rag(request: Request, project_id: int, search_request: SearchRequest):
+    # Pass the sessionmaker directly, not a created session
+    project_model = await ProjectModel.create_instance(db_client=request.app.db_client)
     project = await project_model.get_project_or_create(project_id=project_id)
 
     nlp_controller = NLPController(
@@ -165,13 +162,12 @@ async def answer_rag(request: Request, project_id: str, search_request: SearchRe
         project=project,
         query=search_request.text,
         limit=search_request.limit,
-    ) 
+    )
 
     if not answer:
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "message": ResponseSingle.RAG_ANSWER_FAILED.value},
+            content={"message": ResponseSingle.RAG_ANSWER_FAILED.value},
         )
 
     return JSONResponse(

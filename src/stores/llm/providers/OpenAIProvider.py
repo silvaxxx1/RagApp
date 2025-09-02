@@ -104,7 +104,7 @@ class OpenAIProvider(LLMInterface):
                          role : str):
         return {
             "role" : role,
-            "content" : self.process_text(prompt)
+            "content" : prompt,
         }
             
     
