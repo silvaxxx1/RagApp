@@ -1,3 +1,3 @@
-from .CohereProvider import CohereProviders
+from .CohereProvider import CoHereProvider
 from .OpenAIProvider import OpenAIProvider
 from .OpenSourceEmbeddingProvider import OpenSourceEmbeddingsProvider

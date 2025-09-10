@@ -1,3 +1,1 @@
-from .project import Project 
-from .db_chunks import DataChunk , RetrievedDocument
-from .asset import Asset
+from models.db_schemes.RagApp.schemes import DataChunk, RetrievedDocument, Project, Asset
