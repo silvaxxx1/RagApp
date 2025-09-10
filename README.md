@@ -1,6 +1,6 @@
 # 🧠 RagApp – End-to-End Retrieval-Augmented Generation (RAG) System
 
-**RagApp** is a full-stack, extensible project for building **Retrieval-Augmented Generation (RAG)** systems from scratch — covering everything from data ingestion to LLM-based response generation and deployment.
+**RagApp** is a full-stack, extensible project for building **Retrieval-Augmented Generation (RAG)** systems — from data ingestion to LLM-based responses and deployment.
 
 ---
 
@@ -10,151 +10,93 @@
 
 ---
 
-This repo is designed for:
+## ✅ Highlights – Version 2.0.0 (v2)
 
-* **Hands-on learning** (understand each piece of RAG systems)
-* **Modular experimentation** (swap databases, models, retrievers)
-* **Scaling to production** (deployment, orchestration, monitoring)
+1. **Full Migration to PostgreSQL + PGVector** ✅
 
-> 🔧 Currently in **Phase 2 – v2.0.0** — migrated fully to **Postgres + PGVector**, keeping **Qdrant functional** (dual vector DB), with improved orchestration and async pipelines.
+   * MongoDB completely replaced.
+   * PGVector now fully implemented for vector search.
 
----
+2. **Dual Vector DB Support** 🟢
 
-## ✅ Highlights (v2.0.0)
+   * Qdrant remains fully functional alongside PGVector.
+   * Developers can **switch between PGVector and Qdrant** easily via a single `.env` variable (`VECTOR_DB_PROVIDER`).
+   * Unified interface ensures seamless vector DB operations.
 
-1. **Dual Vector DB Support**
+3. **Orchestration & Performance Improvements** ⚡
 
-   * Fully migrated to **Postgres + PGVector** for scalable vector search.
-   * **Qdrant** still operational, enabling hybrid/dual DB setups.
-   * Switching between vector DBs is now as simple as changing a **single string in `.env`**.
+   * Optimized async pipelines and indexing workflows.
+   * Faster and more robust search and ingestion.
 
-2. **Orchestration Improvements**
+4. **Deployment Ready** 🚀
 
-   * Streamlined async pipelines and indexing workflows.
-   * More robust backend architecture for concurrent queries and vector operations.
-
-3. **Future Plans / Next Steps**
-
-   * Deployment-ready backend.
-   * Scaling with **Celery + Redis** for distributed task management.
-   * Continuous RAG pipeline enhancements (re-ranking, hybrid retrieval, multi-query).
+   * v2 backend is fully stable.
+   * Next steps: integrate **Celery + Redis** for distributed tasks and scaling.
 
 ---
 
-## 📦 Tech Stack (v1 → v2)
+### 📦 Tech Stack (v2)
 
-### **Phase 1 – RagApp-MongoDB-v1**
-
-* FastAPI + Uvicorn
-* MongoDB (Motor async driver)
-* Qdrant for embeddings
-* Ollama (local LLMs), OpenAI, Cohere
-* Sentence Transformers (open-source embeddings)
-* LangChain (document loaders + chunking only)
-* Docker Compose for services
-
-✅ Stable baseline with **MongoDB + Qdrant**.
+* FastAPI + Uvicorn (async-first)
+* PostgreSQL + PGVector (primary vector DB)
+* Qdrant (optional, fully supported)
+* OpenAI, Ollama, Cohere, Sentence Transformers for embeddings
+* Dockerized services
+* Unified vector DB interface (PGVector ↔ Qdrant)
 
 ---
 
-### **Phase 2 – RagApp-v2 (Dual Vector DB & Orchestration Upgrade 🚀)**
+### ⚡ Quickstart
 
-* **Postgres + PGVector fully integrated** (Qdrant still functional)
-* Refactored backend to support **dual database setup**
-* Async workflows & indexing improved for better performance
-* Switching vector DB is configurable via `.env`
-* Ready for deployment and scaling
-
-Next → integrate **Celery + Redis** for distributed tasks and scaling.
-
----
-
-### **Phase 3 – Advanced Orchestration (Planned)**
-
-* Celery + RabbitMQ / Redis for background tasks
-* Advanced RAG strategies (re-ranking, multi-query, hybrid retrieval)
-* Production deployment templates (Docker/K8s, monitoring, CI/CD)
-
----
-
-## ⚡ Quickstart (v2.0.0)
-
-### 1. Clone & Setup
+1. **Clone & Setup**
 
 ```bash
 git clone https://github.com/silvaxxx1/RagApp.git
 cd RagApp
 ```
 
-### 2. Install Dependencies
+2. **Install Dependencies**
 
 ```bash
 uv init
 uv add -r requirements.txt
 ```
 
-### 3. Environment Variables
+3. **Configure Environment Variables**
 
 ```bash
 cp uv.example .env
 ```
 
-Update `.env` with your API keys and **VECTOR\_DB\_PROVIDER** for switching DBs.
+* Update `.env` for your API keys and set `VECTOR_DB_PROVIDER` to `pgvector` or `qdrant`.
 
-### 4. Run Services (Docker)
+4. **Run Services (Docker)**
 
 ```bash
 cd docker
-cp .env.example .env   # update with credentials
 docker-compose up -d
 ```
 
-### 5. Run the Backend (from src root)
-
-```bash
-uvicorn main:app --reload
-```
-
-or with custom host/port:
+5. **Run the Backend**
 
 ```bash
 uvicorn main:app --reload --host 0.0.0.0 --port 5000
 ```
 
-Access Swagger UI → [http://localhost:5000/docs](http://localhost:5000/docs)
+Access Swagger UI: [http://localhost:5000/docs](http://localhost:5000/docs)
 
 ---
 
-## 🗺️ Roadmap (v2.0.0)
+### 🗺️ Roadmap
 
-* [x] **Phase 1** – MongoDB + Qdrant baseline
-* [x] **Alembic migrations with Postgres**
-* [x] **Full PGVector migration + dual DB support**
-* [x] **Orchestration improvements**
+* [x] Full migration to PostgreSQL + PGVector
+* [x] Dual vector DB support (PGVector + Qdrant)
+* [x] Unified DB interface for easy switching
+* [x] Orchestration and async pipeline improvements
 * [ ] Background tasks with Celery + Redis
-* [ ] Advanced RAG methods (re-ranking, hybrid, multi-query)
+* [ ] Advanced RAG strategies (re-ranking, hybrid, multi-query)
 * [ ] Production deployment templates (Docker/K8s, CI/CD)
 
 ---
-
-## 🤝 Contributing
-
-Fork, clone, and build along!
-Ideas, PRs, and discussions are welcome as we evolve RagApp into a **production-grade RAG template**.
-
----
-
-## 📄 License
-
-MIT License – see [LICENSE](./LICENSE)
-
----
-
-This version clearly communicates:
-
-* Postgres + PGVector migration ✅
-* Dual vector DB support (PGVector + Qdrant)
-* Orchestration improvements
-* Next steps (Celery + Redis, scaling)
 
 
