@@ -1,6 +1,6 @@
 
 from ..LLMInterface import LLMInterface
-from ..LLMEnums import CoHereEnums, DocumentTypeEnum
+from ..LLMEnums import CoHereEnums, DocTypeEnums
 import cohere
 import logging
 from typing import List, Union
@@ -66,7 +66,7 @@ class CoHereProvider(LLMInterface):
             text = [text]
 
         input_type = CoHereEnums.DOCUMENT
-        if doc_type == DocumentTypeEnum.QUERY:
+        if doc_type == DocTypeEnums.QUERY:
             input_type = CoHereEnums.QUERY
 
         response = self.client.embed(

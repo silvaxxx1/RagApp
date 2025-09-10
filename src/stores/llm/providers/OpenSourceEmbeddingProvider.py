@@ -20,7 +20,7 @@ class OpenSourceEmbeddingsProvider(LLMInterface, ABC):
         Open-source embedding provider using SentenceTransformers.
         """
         self.model_id = model_id
-        self.emb_size = emb_size
+        self.embedding_size = emb_size
         self.default_input_max_char = default_input_max_char
         self.default_output_max_char = default_output_max_char
         self.default_temperature = default_temperature

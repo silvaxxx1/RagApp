@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from typing import List 
+
 class Settings(BaseSettings):
     # App info
     APP_NAME: str
@@ -18,7 +19,7 @@ class Settings(BaseSettings):
     POSTGRES_MAIN_DATABASE: str
 
     # LLM config
-    GENERATION_MODEL_ID_LITERAL = List[str] = None
+    GENERATION_MODEL_ID_LITERAL : List[str] = None
     GENERATION_BACKEND: str
     EMBEDDING_BACKEND: str
     OPENAI_API_KEY: str = None
@@ -34,7 +35,7 @@ class Settings(BaseSettings):
     GENERATION_DAFAULT_TEMPERATURE: float = None
 
     # Vector DB config
-    VECTOR_DB_BACKEND_LITERAL = List[str] = None
+    VECTOR_DB_BACKEND_LITERAL : List[str] = None
     VECTOR_DB_BACKEND: str
     VECTOR_DB_PATH: str
     VECTOR_DB_METHOD: str = None  # used internally by factory

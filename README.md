@@ -5,7 +5,7 @@
 ---
 
 <p align="center">
-  <img src="ragapp.png" alt="Quantization Overview">
+  <img src="ragapp.png" alt="RagApp Architecture" width="700"/>
 </p>
 
 
@@ -100,12 +100,16 @@ cp .env.example .env   # update with credentials
 docker-compose up -d
 ```
 
-### 5. Run the Backend
+### 5. Run the Backend (from src root)
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 ```
+or with custom host/port:
 
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 5000
+``` 
 Access Swagger UI at → [http://localhost:5000/docs](http://localhost:5000/docs)
 
 ---

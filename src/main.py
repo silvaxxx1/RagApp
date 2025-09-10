@@ -36,9 +36,11 @@ async def startup_span():
     )
 
     # --- Vector DB ---
-    vectordb_provider_factory = VectorDBProvidersFactory(settings)
+    vectordb_provider_factory = VectorDBProvidersFactory(config=settings, db_client=app.db_client)
     app.vectordb_client = vectordb_provider_factory.create(provider=settings.VECTOR_DB_BACKEND)
-    app.vectordb_client.connect()  # ✅ no arguments
+    
+    # Add 'await' to the connect() call
+    await app.vectordb_client.connect()
 
     # --- Template Parser ---
     app.template_parser = TemplateParser(
@@ -48,7 +50,7 @@ async def startup_span():
 
 async def shutdown_span():
     await app.db_engine.dispose()
-    app.vectordb_client.disconnect()
+    app.vectordb_client.disconnect() # Assuming disconnect() is not a coroutine
 
 app.on_event("startup")(startup_span)
 app.on_event("shutdown")(shutdown_span)
