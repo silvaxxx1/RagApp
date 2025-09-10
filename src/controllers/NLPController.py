@@ -69,16 +69,22 @@ class NLPController(BaseController):
 
         # step2: get text embedding vector
         vectors = self.embedding_client.embed_text(text=text, 
-                                                 document_type=DocTypeEnums.QUERY.value)
+                                                 doc_type=DocTypeEnums.QUERY.value)
 
         if not vectors or len(vectors) == 0:
             return False
-        
-        if isinstance(vectors, list) and len(vectors) > 0:
-            query_vector = vectors[0]
 
-        if not query_vector:
-            return False    
+        # Ensure query_vector is always a list of floats
+        if isinstance(vectors[0], list):
+            # 2D output -> take the first embedding
+            query_vector = vectors[0]
+        else:
+            # 1D output -> it's already a single embedding
+            query_vector = vectors
+
+        if not query_vector or not isinstance(query_vector, list):
+            return False
+
 
         # step3: do semantic search
         results = await self.vectordb_client.search_by_vector(
@@ -92,7 +98,7 @@ class NLPController(BaseController):
 
         return results
     
-    async def answer_rag_question(self, project: Project, query: str, limit: int = 10):
+    async def answer_rag_query(self, project: Project, query: str, limit: int = 10):
         
         answer, full_prompt, chat_history = None, None, None
 

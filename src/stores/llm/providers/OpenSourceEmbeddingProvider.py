@@ -48,7 +48,7 @@ class OpenSourceEmbeddingsProvider(LLMInterface, ABC):
         self.emb_size = emb_size
         self._load_model(model_id)
 
-    def generate_text(self, prompt: str, char_history: list = [],
+    def generate_text(self, prompt: str, chat_history: list = [],
                       max_output_tokens: int = None, temperature: float = None):
         raise NotImplementedError("This provider only supports embeddings.")
 

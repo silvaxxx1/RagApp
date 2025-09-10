@@ -34,7 +34,7 @@ class CoHereProvider(LLMInterface):
     def process_text(self, text: str):
         return text[:self.default_input_max_characters].strip()
 
-    def generate_text(self, prompt: str, char_history: list = [], max_output_tokens: int = None,
+    def generate_text(self, prompt: str, chat_history: list = [], max_output_tokens: int = None,
                       temperature: float = None):
         if not self.client or not self.generation_model_id:
             self.logger.error("CoHere client or generation model not set")
@@ -45,7 +45,7 @@ class CoHereProvider(LLMInterface):
 
         response = self.client.chat(
             model = self.generation_model_id,
-            chat_history = char_history,
+            chat_history = chat_history,
             message = self.process_text(prompt),
             temperature = temperature,
             max_tokens = max_output_tokens

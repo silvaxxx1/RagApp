@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 from routes import base, data, nlp
 from helpers.config import get_settings
@@ -7,17 +8,25 @@ from stores.llm.templates.template_parser import TemplateParser
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
+# --- Apply logging configuration here ---
+logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
+logging.getLogger('asyncio').setLevel(logging.WARNING)
+# ------------------------------------------
+
 app = FastAPI()
 
 async def startup_span():
     settings = get_settings()
 
     # --- Postgres connection ---
+    # The 'echo=True' setting on the engine should also be removed
+    # if you want to completely silence the SQL queries from SQLAlchemy.
     postgres_connec = (
         f"postgresql+asyncpg://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}"
         f"@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_MAIN_DATABASE}"
     )
-    app.db_engine = create_async_engine(postgres_connec, echo=True, future=True)
+    # Change 'echo=True' to 'echo=False' to completely disable query logging
+    app.db_engine = create_async_engine(postgres_connec, echo=False, future=True) 
     app.db_client = sessionmaker(
         app.db_engine,
         class_=AsyncSession,

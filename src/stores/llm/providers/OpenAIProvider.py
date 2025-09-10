@@ -28,6 +28,7 @@ class OpenAIProvider(LLMInterface):
             base_url = self.api_url if self.api_url else None
         )
 
+        self.enums = OpenAIEnums
         self.logger = logging.getLogger(__name__)
 
     def set_gen_model(self, model_id: str):
@@ -40,7 +41,7 @@ class OpenAIProvider(LLMInterface):
     def process_text(self, text: str):
         return text[:self.default_input_max_characters].strip()
 
-    def generate_text(self, prompt: str, char_history: list = [], max_output_tokens: int = None,
+    def generate_text(self, prompt: str, chat_history: list = [], max_output_tokens: int = None,
                       temperature: float = None):
 
         if not self.client or not self.generation_model_id:
@@ -50,11 +51,11 @@ class OpenAIProvider(LLMInterface):
         max_output_tokens = max_output_tokens or self.default_generation_max_output_tokens
         temperature = temperature or self.default_generation_temperature
 
-        char_history.append(self.construct_prompt(prompt=prompt, role=OpenAIEnums.USER.value))
+        chat_history.append(self.construct_prompt(prompt=prompt, role=OpenAIEnums.USER.value))
 
         response = self.client.chat.completions.create(
             model = self.generation_model_id,
-            messages = char_history,
+            messages = chat_history,
             max_tokens = max_output_tokens,
             temperature = temperature
         )

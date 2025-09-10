@@ -115,7 +115,7 @@ async def get_project_index_info(request: Request, project_id: int):
         template_parser=request.app.template_parser,
     )
 
-    collection_info = await nlp_controller.get_vectordb_collection_info(project=project)
+    collection_info = await nlp_controller.get_vector_db_collection_info(project=project)
     return JSONResponse(
         content={
             "message": ResponseSingle.VECTORDB_COLLECTION_RETRIEVED.value,
