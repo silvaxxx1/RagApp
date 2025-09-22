@@ -17,3 +17,10 @@ alembic
 psycopg2-binary
 pgvector
 nltk
+
+# Monitring and metrics 
+prometheus-client
+starlette-exporter
+
+# Health checks
+fastapi-health

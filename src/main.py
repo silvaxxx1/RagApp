@@ -8,12 +8,18 @@ from stores.llm.templates.template_parser import TemplateParser
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
+from utils.metrics import setup_metrics
+
 # --- Apply logging configuration here ---
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger('asyncio').setLevel(logging.WARNING)
 # ------------------------------------------
 
 app = FastAPI()
+
+# setup Prometheus metrics
+from utils.metrics import setup_metrics
+
 
 async def startup_span():
     settings = get_settings()
@@ -26,7 +32,7 @@ async def startup_span():
         f"@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_MAIN_DATABASE}"
     )
     # Change 'echo=True' to 'echo=False' to completely disable query logging
-    app.db_engine = create_async_engine(postgres_connec, echo=False, future=True) 
+    app.db_engine = create_async_engine(postgres_connec, echo=False, future=True) https://x.com/i/status/1969758559802937734
     app.db_client = sessionmaker(
         app.db_engine,
         class_=AsyncSession,
@@ -57,7 +63,7 @@ async def startup_span():
         default_language=settings.DEFAULT_LANG
     )
 
-async def shutdown_span():
+async def shutdown_span(): 
     await app.db_engine.dispose()
     app.vectordb_client.disconnect() # Assuming disconnect() is not a coroutine
 
