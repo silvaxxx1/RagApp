@@ -17,8 +17,12 @@ logging.getLogger('asyncio').setLevel(logging.WARNING)
 
 app = FastAPI()
 
-# setup Prometheus metrics
-from utils.metrics import setup_metrics
+# Setup Prometheus metrics
+setup_metrics(app)
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
 
 
 async def startup_span():
@@ -35,7 +39,6 @@ async def startup_span():
         class_=AsyncSession,
         expire_on_commit=False
     )
-
 
     # --- LLM Clients ---
     llm_provider = LLMProviderFactory(settings)
