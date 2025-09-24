@@ -1,6 +1,6 @@
 # 🧠 RagApp – End-to-End Retrieval-Augmented Generation (RAG) System
 
-**RagApp** is a full-stack, extensible project for building **Retrieval-Augmented Generation (RAG)** systems from scratch — covering everything from data ingestion to LLM-based response generation and deployment.
+**RagApp** is a full-stack, extensible project for building **Retrieval-Augmented Generation (RAG)** systems — from data ingestion and vector indexing to LLM-based response generation and deployment.
 
 ---
 
@@ -8,63 +8,57 @@
   <img src="ragapp.png" alt="RagApp Architecture" width="700"/>
 </p>
 
-
 ---
+
 This repo is designed for:
 
-* **Hands-on learning** (understand each piece of RAG systems)
-* **Modular experimentation** (swap databases, models, retrievers)
-* **Scaling to production** (deployment, orchestration, monitoring)
+* **Hands-on learning** (understand each piece of a RAG system)
+* **Modular experimentation** (swap databases, embeddings, and chunking logic)
+* **Scaling to production** (async pipelines, orchestration, and deployment)
 
-> 🔧 Currently in **Phase 2** — migrating from MongoDB → Postgres/pgvector for scalable vector search and orchestration.
-
----
-
-## ✅ Highlights
-
-* 🔎 **Retriever-Generator separation** (clean, modular architecture)
-* 🚀 **FastAPI backend** (async-first, OpenAPI ready)
-* 🧠 **LLM flexibility**: OpenAI, Ollama (on-prem), Cohere, Sentence Transformers
-* 📦 **Database options**: MongoDB (Motor) ✅ → Postgres + pgvector (in progress)
-* 🔍 **Vector search**: Qdrant (current) → pgvector (planned)
-* 🧪 **LangChain (PDF parsing + chunking only)**, keeping rest lightweight
-* 🐳 **Dockerized services** (MongoDB, Postgres, Qdrant)
-* 🔁 **CI/CD-ready** architecture (phase 3 roadmap)
+> 🔧 **Version 2.0.0** is fully ready — complete migration to **PostgreSQL + PGVector**, dual vector DB support with Qdrant, custom chunking logic, and orchestration improvements.
 
 ---
 
-## 📦 Tech Stack (v1 → v2)
+## ✅ Highlights – Version 2.0.0
 
-### **Phase 1 – RagApp-MongoDB-v1 (Latest Stable)**
+1. **Full Migration to PostgreSQL + PGVector** ✅
 
-* FastAPI + Uvicorn
-* MongoDB (Motor async driver)
-* Qdrant for embeddings
-* Ollama (local LLMs), OpenAI, Cohere
-* Sentence Transformers (open-source embeddings)
-* LangChain (document loaders + chunking only)
-* Docker Compose for services
+   * MongoDB fully replaced.
+   * PGVector now fully implemented for vector search.
 
-✅ Stable and functional baseline with **MongoDB + Qdrant**.
+2. **Dual Vector DB Support** 🟢
+
+   * Qdrant remains fully functional alongside PGVector.
+   * Developers can **switch between PGVector and Qdrant** easily via a single `.env` variable (`VECTOR_DB_PROVIDER`).
+   * Unified interface ensures seamless vector DB operations.
+
+3. **Custom Chunking Logic** ✂️
+
+   * LangChain is no longer required.
+   * Custom chunking tailored to RagApp’s workflow for better performance and flexibility.
+   * Developers can optionally enable LangChain chunking if desired.
+
+4. **Orchestration & Performance Improvements** ⚡
+
+   * Optimized async pipelines and indexing workflows.
+   * Faster and more robust search and ingestion.
+
+5. **Deployment Ready** 🚀
+
+   * v2 backend is fully stable.
+   * Next steps: integrate **Celery + Redis** for distributed task management and scaling.
 
 ---
 
-### **Phase 2 – Scaling Up (In Progress 🚧)**
+## 📦 Tech Stack (v2)
 
-* **Postgres + Alembic migrations (done)**
-* **pgvector integration (coming soon)**
-* Refactored backend to support dual database setup
-* Running hybrid **Postgres + Qdrant** stack smoothly
-
-Next → replace Qdrant with **pgvector-only architecture**.
-
----
-
-### **Phase 3 – Advanced Orchestration (Planned 🚀)**
-
-* Celery + RabbitMQ for background tasks & distributed pipelines
-* Advanced RAG strategies (re-ranking, multi-query, hybrid retrieval)
-* Deployment-ready infra (cloud/K8s, monitoring, scaling)
+* **Backend**: FastAPI + Uvicorn (async-first, OpenAPI-ready)
+* **Vector DB**: PostgreSQL + PGVector (primary) + Qdrant (optional, fully supported)
+* **Embeddings / LLMs**: OpenAI, Ollama, Cohere, Sentence Transformers
+* **Chunking**: Custom logic (LangChain optional)
+* **Dockerized services**: PostgreSQL, Qdrant
+* **Unified vector DB interface** (switch PGVector ↔ Qdrant via `.env`)
 
 ---
 
@@ -84,44 +78,45 @@ uv init
 uv add -r requirements.txt
 ```
 
-### 3. Environment Variables
+### 3. Configure Environment Variables
 
 ```bash
 cp uv.example .env
 ```
 
-Update `.env` with your API keys and configs.
+* Set API keys for OpenAI, Ollama, etc.
+* Choose your vector DB provider:
+
+```env
+VECTOR_DB_PROVIDER=pgvector   # or "qdrant"
+```
 
 ### 4. Run Services (Docker)
 
 ```bash
 cd docker
-cp .env.example .env   # update with credentials
 docker-compose up -d
 ```
 
-### 5. Run the Backend (from src root)
-
-```bash
-uvicorn main:app --reload
-```
-or with custom host/port:
+### 5. Run the Backend
 
 ```bash
 uvicorn main:app --reload --host 0.0.0.0 --port 5000
-``` 
-Access Swagger UI at → [http://localhost:5000/docs](http://localhost:5000/docs)
+```
+
+Access Swagger UI → [http://localhost:5000/docs](http://localhost:5000/docs)
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ Roadmap (v2.0.0)
 
-* [x] **Phase 1** – MongoDB + Qdrant baseline
-* [x] Alembic migrations with Postgres
-* [ ] Full pgvector migration (replace Qdrant)
-* [ ] RAG pipeline orchestration improvements
-* [ ] Background tasks with Celery + RabbitMQ
-* [ ] Advanced RAG methods (re-ranking, hybrid, multi-query)
+* [x] Full migration to PostgreSQL + PGVector
+* [x] Dual vector DB support (PGVector + Qdrant)
+* [x] Unified DB interface for seamless switching
+* [x] Custom chunking logic implemented (LangChain optional)
+* [x] Orchestration & async pipeline improvements
+* [ ] Background tasks with Celery + Redis
+* [ ] Advanced RAG strategies (re-ranking, hybrid, multi-query)
 * [ ] Production deployment templates (Docker/K8s, CI/CD)
 
 ---
@@ -136,5 +131,15 @@ Ideas, PRs, and discussions are welcome as we evolve RagApp into a **production-
 ## 📄 License
 
 MIT License – see [LICENSE](./LICENSE)
+
+---
+
+This README now clearly communicates:
+
+* **v2 is fully ready** ✅
+* **PGVector fully implemented** and MongoDB removed
+* **Dual vector DB** support with easy switching via `.env`
+* **Custom chunking** replaces LangChain but remains optional
+* **Orchestration and async pipelines improved**
 
 ---

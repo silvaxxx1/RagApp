@@ -1,14 +1,14 @@
-fastapi 
+fastapi
 uvicorn[standard]
 python-multipart
 python-dotenv
 pydantic-settings
 aiofiles
-langchain 
+langchain
 langchain-community
 PyMuPDF
-Motor 
-openai 
+Motor
+openai
 cohere
 qdrant-client
 SQLAlchemy
@@ -17,3 +17,14 @@ alembic
 psycopg2-binary
 pgvector
 nltk
+
+# LLM / Embeddings
+sentence-transformers>=2.2.2
+torch>=2.1.0
+
+# Monitoring and metrics
+prometheus-client
+starlette-exporter
+
+# Health checks
+fastapi-health
